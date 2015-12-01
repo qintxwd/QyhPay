@@ -1,5 +1,7 @@
 package com.qyh.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,11 @@ public class UserService implements IUserService {
 	@Override
 	public User get(int id) {
 		return userDao.get(id);
+	}
+
+	@Override
+	public List<User> getUserList(int page) {
+		return userDao.getUserList(page);
 	}
 
 }

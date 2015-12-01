@@ -1,5 +1,7 @@
 package com.qyh.service;
 
+import java.util.List;
+
 import com.qyh.entity.User;
 
 public interface IUserService {
@@ -13,4 +15,6 @@ public interface IUserService {
 	public User get(String name);
 
 	public User get(int id);
+
+	public List<User> getUserList(int page);
 }
