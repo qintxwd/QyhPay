@@ -1,8 +1,10 @@
 package com.qyh.Action;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.qyh.entity.Machine;
 import com.qyh.entity.User;
 import com.qyh.entity.UserAliInfo;
 import com.qyh.entity.UserWXInfo;
@@ -46,7 +49,7 @@ public class Admin {
 			@RequestParam("md5key") String md5key, @RequestParam("seller_email") String seller_email,
 			@RequestParam("seller_id") String seller_id, @RequestParam("appid") String appid,
 			@RequestParam("key") String key, @RequestParam("mch_id") String mch_id,
-			@RequestParam("secret") String secret) {
+			@RequestParam("secret") String secret, @RequestParam("machines") String[] machineNames) {
 		String s = new String();
 		if (username.equals("")) {
 			s = "用户名不能为空";
@@ -88,6 +91,16 @@ public class Admin {
 			uwx.setSecret(secret);
 			uwx.setUser(u);
 			u.setUserWXInfo(uwx);
+		}
+		if (machineNames != null && machineNames.length != 0) {
+			Set<Machine> machines = new HashSet<Machine>();
+			for (int i = 0; i < machineNames.length; i++) {
+				Machine m = new Machine();
+				m.setName(machineNames[i]);
+				m.setUser(u);
+				machines.add(m);
+			}
+			u.setMachines(machines);
 		}
 		userService.save(u);
 		s = "添加成功";

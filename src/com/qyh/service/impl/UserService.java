@@ -31,6 +31,9 @@ public class UserService implements IUserService {
 		if (user.getUserWXInfo() != null) {
 			userWXInfoDao.save(user.getUserWXInfo());
 		}
+//		if(user.getMachines()!=null){
+//			//TODO
+//		}
 	}
 
 	@Override

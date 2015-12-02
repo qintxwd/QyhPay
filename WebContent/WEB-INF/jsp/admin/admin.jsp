@@ -21,13 +21,48 @@
 
 <script type="text/javascript">
 	$(function() {
-
+		var maxAddMachineIndex = 0;
+		var hasContent = false;
 		function getNext(prefix) {
 			s = parseInt(prefix.substring(10, prefix.length)) + 1;
 			next = "addmachine" + s.toString();
 			return next;
 		}
-		;
+		$("body").on("keydown", ".addmachine", function() {
+			if ($(this).val() != "") {
+				hasContent = true;
+			} else {
+				hasContent = false;
+			}
+		});
+		$("body")
+				.on(
+						"keyup",
+						".addmachine",
+						function() {
+							if ($(this).val() != "") {
+								if (hasContent) {
+									//donothing
+								} else {
+									//添加内容
+									next = "addmachine"
+											+ (maxAddMachineIndex + 1)
+													.toString();
+									newTr = "<tr><td><label>添加机器:</label></td><td><input type=\"text\" required=\"required\" class=\"addmachine\" id=\""+next+"\" name=\""+next+"\"></td></tr>";
+									$("#addUserTable").append(newTr);
+									maxAddMachineIndex++;
+								}
+							} else {
+								if (hasContent) {
+									//删除最大的
+									$("#" + maxAddMachineIndex).parent()
+											.parent().remove();
+									maxAddMachineIndex--;
+								} else {
+									//donothing
+								}
+							}
+						});
 
 		$("body")
 				.on(
@@ -73,10 +108,20 @@
 			buttons : [ {
 				text : "添加",
 				click : function() {
+					var machineNames = new Array();
+					j = 0;
+					for (i = 0; i <= maxAddMachineIndex; i++) {
+						id = "addmachine" + (i).toString();
+						if ($("#" + id).length) {
+							if($("#" + id).val()!="")
+								machineNames[j++] = $("#" + id).val();
+						}
+					}
 					$.ajax({
 						url : "admin/addUser",
 						type : 'GET',
 						timeout : 10000,
+						traditional : true,
 						data : {
 							"username" : $("#add-username").val(),
 							"password" : $("#add-password").val(),
@@ -89,6 +134,7 @@
 							"key" : $("#add-key").val(),
 							"mch_id" : $("#add-mch_id").val(),
 							"secret" : $("#add-secret").val(),
+							"machines" : machineNames,
 						},
 						dataType : "text",
 						beforeSend : function() {
@@ -124,7 +170,8 @@
 							$("#addUserTable")
 									.append(
 											"<tr><td><label>添加机器:</label></td><td><input type=\"text\" required=\"required\" class=\"addmachine\" id=\"addmachine0\" name=\"addmachine0\"></td></tr>");
-
+							maxAddMachineIndex = 0;
+							hasContent = false;
 							$("#dialog").dialog("open");
 							event.preventDefault();
 						});
