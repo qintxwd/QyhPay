@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class UserWXInfo implements Serializable {
 
@@ -22,6 +24,7 @@ public class UserWXInfo implements Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Integer id;
 	@OneToOne(cascade = CascadeType.ALL)
+	@JsonBackReference
 	private User user;
 	@Column(name = "appid", length = 500, nullable = false)
 	private String appid;

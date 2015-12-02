@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.qyh.entity.User;
+import com.qyh.entity.UserAliInfo;
+import com.qyh.entity.UserWXInfo;
 import com.qyh.service.impl.UserService;
 
 @Controller
@@ -35,5 +37,60 @@ public class Admin {
 		List<User> users = userService.getUserList(page);
 		map.put("users", users);
 		return map;
+	}
+
+	@ResponseBody
+	@RequestMapping(path = "/admin/addUser", produces = "text/html;charset=UTF-8")
+	public String addUser(@RequestParam("username") String username, @RequestParam("password") String password,
+			@RequestParam("partner") String partner, @RequestParam("pid") String pid,
+			@RequestParam("md5key") String md5key, @RequestParam("seller_email") String seller_email,
+			@RequestParam("seller_id") String seller_id, @RequestParam("appid") String appid,
+			@RequestParam("key") String key, @RequestParam("mch_id") String mch_id,
+			@RequestParam("secret") String secret) {
+		String s = new String();
+		if (username.equals("")) {
+			s = "用户名不能为空";
+			return s;
+		}
+		if (password.equals("")) {
+			s = "密码不能为空";
+			return s;
+		}
+		if (!((partner.equals("") && pid.equals("") && md5key.equals("") && seller_email.equals("")
+				&& seller_id.equals(""))
+				|| (!partner.equals("") && !pid.equals("") && !md5key.equals("") && !seller_email.equals("")
+						&& !seller_id.equals("")))) {
+			s = "请完善支付宝信息";
+			return s;
+		}
+		if (!((appid.equals("") && key.equals("") && mch_id.equals("") && secret.equals(""))
+				|| (!appid.equals("") && !key.equals("") && !mch_id.equals("") && !secret.equals("")))) {
+			s = "请完善微信信息";
+			return s;
+		}
+
+		User u = new User(username, password);
+		if (!md5key.equals("")) {
+			UserAliInfo uali = new UserAliInfo();
+			uali.setMd5key(md5key);
+			uali.setPartner(partner);
+			uali.setPid(pid);
+			uali.setSeller_email(seller_email);
+			uali.setSeller_id(seller_id);
+			uali.setUser(u);
+			u.setUserAliInfo(uali);
+		}
+		if (!appid.equals("")) {
+			UserWXInfo uwx = new UserWXInfo();
+			uwx.setAppid(appid);
+			uwx.setKey(key);
+			uwx.setMch_id(mch_id);
+			uwx.setSecret(secret);
+			uwx.setUser(u);
+			u.setUserWXInfo(uwx);
+		}
+		userService.save(u);
+		s = "添加成功";
+		return s;
 	}
 }

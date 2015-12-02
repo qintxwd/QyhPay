@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class UserAliInfo implements Serializable {
 	private static final long serialVersionUID = 8904281547213597382L;
@@ -20,6 +22,7 @@ public class UserAliInfo implements Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Integer id;
 	@OneToOne(cascade = CascadeType.ALL)
+	@JsonBackReference
 	private User user;
 	@Column(name = "pid", length = 500, nullable = false)
 	private String pid;

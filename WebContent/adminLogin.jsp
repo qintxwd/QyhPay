@@ -30,7 +30,7 @@ body {
 		<form class="form-4" action="admin/login" method="post">
 			<h1>管理员登录</h1>
 			<p>
-				<label for="login">请输入您的用户名</label> <input type="text"
+				<label for="username">请输入您的用户名</label> <input type="text"
 					name="username" placeholder="请输入您的用户名" required="required">
 			</p>
 			<p>
