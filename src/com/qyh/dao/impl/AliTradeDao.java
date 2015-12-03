@@ -2,13 +2,14 @@ package com.qyh.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.type.StringType;
 import org.springframework.stereotype.Repository;
 
 import com.qyh.dao.BaseHibernateDao;
 import com.qyh.dao.IAliTradeDao;
 import com.qyh.entity.AliTrade;
 
-// ÉùÃ÷´ËÀàÎªÊý¾Ý³Ö¾Ã²ãµÄÀà
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Ý³Ö¾Ã²ï¿½ï¿½ï¿½ï¿½
 @Repository("aliTradeDao")
 public class AliTradeDao extends BaseHibernateDao implements IAliTradeDao {
 
@@ -36,6 +37,17 @@ public class AliTradeDao extends BaseHibernateDao implements IAliTradeDao {
 	@Override
 	public AliTrade get(int id) {
 		return (AliTrade) getSession().get("from AliTrade", id);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public AliTrade get(String out_trade_no) {
+		String hql = "from AliTrade where out_trade_no=? ";
+		List<AliTrade> l = getSession().createQuery(hql).setParameter(0, out_trade_no, StringType.INSTANCE).list();
+		if (l == null || l.isEmpty())
+			return null;
+		else
+			return l.get(0);
 	}
 
 }

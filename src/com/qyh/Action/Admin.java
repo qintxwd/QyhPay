@@ -1,5 +1,6 @@
 package com.qyh.Action;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -51,24 +52,42 @@ public class Admin {
 			@RequestParam("key") String key, @RequestParam("mch_id") String mch_id,
 			@RequestParam("secret") String secret, @RequestParam("machines") String[] machineNames) {
 		String s = new String();
+		try {
+			username =  new String(username.getBytes("ISO-8859-1"), "UTF-8"); 
+			password =  new String(password.getBytes("ISO-8859-1"), "UTF-8"); 
+			partner =  new String(partner.getBytes("ISO-8859-1"), "UTF-8"); 
+			pid =  new String(pid.getBytes("ISO-8859-1"), "UTF-8"); 
+			md5key =  new String(md5key.getBytes("ISO-8859-1"), "UTF-8"); 
+			seller_email =  new String(seller_email.getBytes("ISO-8859-1"), "UTF-8"); 
+			seller_id =  new String(seller_id.getBytes("ISO-8859-1"), "UTF-8"); 
+			appid =  new String(appid.getBytes("ISO-8859-1"), "UTF-8"); 
+			key =  new String(key.getBytes("ISO-8859-1"), "UTF-8"); 
+			mch_id =  new String(mch_id.getBytes("ISO-8859-1"), "UTF-8"); 
+			secret =  new String(secret.getBytes("ISO-8859-1"), "UTF-8"); 
+			for (int i = 0; i < machineNames.length; i++) {
+				machineNames[i] =  new String(machineNames[i].getBytes("ISO-8859-1"), "UTF-8"); 
+			}
+		} catch (UnsupportedEncodingException e) {
+			return "å‘ç”Ÿè½¬ç é”™è¯¯";
+		}
 		if (username.equals("")) {
-			s = "ÓÃ»§Ãû²»ÄÜÎª¿Õ";
+			s = "ç”¨æˆ·åä¸èƒ½ä¸ºç©º";
 			return s;
 		}
 		if (password.equals("")) {
-			s = "ÃÜÂë²»ÄÜÎª¿Õ";
+			s = "å¯†ç ä¸èƒ½ä¸ºç©º";
 			return s;
 		}
 		if (!((partner.equals("") && pid.equals("") && md5key.equals("") && seller_email.equals("")
 				&& seller_id.equals(""))
 				|| (!partner.equals("") && !pid.equals("") && !md5key.equals("") && !seller_email.equals("")
 						&& !seller_id.equals("")))) {
-			s = "ÇëÍêÉÆÖ§¸¶±¦ÐÅÏ¢";
+			s = "è¯·å®Œå–„æ”¯ä»˜å®ä¿¡æ¯";
 			return s;
 		}
 		if (!((appid.equals("") && key.equals("") && mch_id.equals("") && secret.equals(""))
 				|| (!appid.equals("") && !key.equals("") && !mch_id.equals("") && !secret.equals("")))) {
-			s = "ÇëÍêÉÆÎ¢ÐÅÐÅÏ¢";
+			s = "è¯·å®Œå–„å¾®ä¿¡ä¿¡æ¯";
 			return s;
 		}
 
@@ -103,7 +122,7 @@ public class Admin {
 			u.setMachines(machines);
 		}
 		userService.save(u);
-		s = "Ìí¼Ó³É¹¦";
+		s = "æ·»åŠ æˆåŠŸ";
 		return s;
 	}
 }

@@ -22,84 +22,51 @@
 <script type="text/javascript">
 	$(function() {
 		var maxAddMachineIndex = 0;
-		var hasContent = false;
+		var addMachineNotBlankIndex = 0; //-1代表没有空白  0 - n代表 id为n的为空白输入框
 		function getNext(prefix) {
 			s = parseInt(prefix.substring(10, prefix.length)) + 1;
 			next = "addmachine" + s.toString();
 			return next;
 		}
-		$("body").on("keydown", ".addmachine", function() {
-			if ($(this).val() != "") {
-				hasContent = true;
-			} else {
-				hasContent = false;
-			}
-		});
 		$("body")
 				.on(
 						"keyup",
 						".addmachine",
 						function() {
 							if ($(this).val() != "") {
-								if (hasContent) {
-									//donothing
-								} else {
-									//添加内容
+								if ($(
+										"#addmachine"
+												+ addMachineNotBlankIndex
+														.toString()).val() != "") {
+									//add 并且指向新添加的addMachineNotBlankIndex = add
+									//添加
 									next = "addmachine"
 											+ (maxAddMachineIndex + 1)
 													.toString();
 									newTr = "<tr><td><label>添加机器:</label></td><td><input type=\"text\" required=\"required\" class=\"addmachine\" id=\""+next+"\" name=\""+next+"\"></td></tr>";
 									$("#addUserTable").append(newTr);
 									maxAddMachineIndex++;
-								}
-							} else {
-								if (hasContent) {
-									//删除最大的
-									$("#" + maxAddMachineIndex).parent()
-											.parent().remove();
-									maxAddMachineIndex--;
+									addMachineNotBlankIndex = maxAddMachineIndex;
 								} else {
 									//donothing
 								}
-							}
-						});
-
-		$("body")
-				.on(
-						"keyup",
-						".addmachine",
-						function() {
-							if ($(this).val() != "") {
-								var idstr = $(this).attr('id');
-								next = getNext(idstr);
-								needadd = true;
-								while ($("#" + next).length) {
-									if ($("#" + next).val() != "") {
-										next = getNext(next);
-										continue;
-									} else {
-										needadd = false;
-										break;
-									}
-								}
-								if (needadd) {
-									newTr = "<tr><td><label>添加机器:</label></td><td><input type=\"text\" required=\"required\" class=\"addmachine\" id=\""+next+"\" name=\""+next+"\"></td></tr>";
-									$("#addUserTable").append(newTr);
-								}
 							} else {
-								var idstr = $(this).attr('id');
-								next = getNext(idstr);
-								while ($("#" + next).length) {
-									if ($("#" + next).val() != "") {
-										next = getNext(next);
-										continue;
-									} else {
-										$("#" + next).parent().parent()
-												.remove();
-										break;
-									}
+								if ($(this).attr('id') == ("addmachine" + addMachineNotBlankIndex
+										.toString())) {
+									//本来就是空的donothing
+								} else {
+									//删除原来的 //指向新的kongbai
+									$(
+											"#addmachine"
+													+ addMachineNotBlankIndex
+															.toString())
+											.parent().parent().remove();
+									var nowid = $(this).attr('id');
+									addMachineNotBlankIndex = parseInt(nowid
+											.substring(10, nowid.length));
 								}
 							}
+
 						});
 
 		$("#dialog").dialog({
@@ -113,15 +80,15 @@
 					for (i = 0; i <= maxAddMachineIndex; i++) {
 						id = "addmachine" + (i).toString();
 						if ($("#" + id).length) {
-							if($("#" + id).val()!="")
+							if ($("#" + id).val() != "")
 								machineNames[j++] = $("#" + id).val();
 						}
 					}
 					$.ajax({
 						url : "admin/addUser",
 						type : 'GET',
-						timeout : 10000,
 						traditional : true,
+						contentType : 'application/json;charset=UTF-8',
 						data : {
 							"username" : $("#add-username").val(),
 							"password" : $("#add-password").val(),
@@ -171,7 +138,6 @@
 									.append(
 											"<tr><td><label>添加机器:</label></td><td><input type=\"text\" required=\"required\" class=\"addmachine\" id=\"addmachine0\" name=\"addmachine0\"></td></tr>");
 							maxAddMachineIndex = 0;
-							hasContent = false;
 							$("#dialog").dialog("open");
 							event.preventDefault();
 						});
@@ -200,13 +166,81 @@
 								var users = data["users"];
 								var i;
 								for (i = 0; i < users.length; i++) {
-									var t = "<h3>" + users[i].username
-											+ "</h3>";
-									var x = "<div><table><tr><td>用户名:</td><td>"
-											+ users[i].username
-											+ "</td><td>密码:</td><td>"
-											+ users[i].password
-											+ "</td></tr><tr><tr><td>支付宝账号:</td><td id=\"ali\">aaa</td><td>appid:</td><td>appid</td></tr><tr><td>微信账号:</td><td>bbb</td><td>appid</td><td>appid</td></tr><tr><td>机器列表:</td><td><td></tr><tr><td></td><td>售卖机器人</td><tr></table></div>";
+									//组成机器列表
+									var ml = "";
+									var j = 0;
+									if (users.length <= 0)
+										ml = "<td width='9%' align='center'></td><td width='9%' align='center'></td><td width='9%' align='center'></td><td width='9%' align='center'></td><td width='9%' align='center'></td><td width='9%' align='center'></td><td width='9%' align='center'></td><td width='9%' align='center'></td><td width='9%' align='center'></td><td width='9%' align='center'></td>";
+									else {
+										for (j = 0; j < users[i].machines.length; j++) {
+											ml += "<td width='9%' align='center'>"
+													+ users[i].machines[j].name
+													+ "</td>"
+											if (j % 10 == 9) {
+												ml += "</tr><tr><td  width='9%' align='center'></td>"
+											}
+										}
+										if (j % 10 == 0) {
+											ml = ml.substring(0, ml.length - 4);
+										} else {
+											for (; j % 10 != 0; j++) {
+												ml += "<td width='9%' align='center'></td>"
+											}
+											ml += "</tr>"
+										}
+									}
+									var t, x;
+									if (users[i].username != null) {
+										t = "<h3>" + users[i].username
+												+ "</h3>";
+									} else {
+										t = "<h3></h3>";
+									}
+									x = "<div><table  style='border-collapse:collapse;'><tr><th align='center' width='9%'>用户名</th><th align='center'  width='9%'>密码</th><th align='center'  width='9%'>支付宝email</th><th align='center'  width='9%'>支付宝id</th><th width='9%' align='center' >支付宝pid</th><th width='9%' align='center' >支付宝partner</th><th width='9%' align='center' >支付宝md5key</th><th width='9%' align='center' >微信mch_id</th><th width='9%'>微信appid</th><th width='9%' align='center' >微信key</th><th width='9%' align='center' >微信secret</th></tr><tr><td width='9%' align='center' >";
+									if (users[i].username != null) {
+										x += users[i].username;
+									}
+									x += "</td><td width='9%' align='center' >";
+									if (users[i].password != null)
+										x += users[i].password;
+									x += "</td><td width='9%' align='center' >";
+									if (users[i].userAliInfo != null
+											&& users[i].userAliInfo.seller_email != null)
+										x += users[i].userAliInfo.seller_email;
+									x += "</td><td width='9%' align='center' >";
+									if (users[i].userAliInfo != null
+											&& users[i].userAliInfo.seller_id != null)
+										x += users[i].userAliInfo.seller_id;
+									x += "</td><td width='9%' align='center' >";
+									if (users[i].userAliInfo != null
+											&& users[i].userAliInfo.pid != null)
+										x += users[i].userAliInfo.pid;
+									x += "</td><td width='9%' align='center' >";
+									if (users[i].userAliInfo != null
+											&& users[i].userAliInfo.partner != null)
+										x += users[i].userAliInfo.partner;
+									x += "</td><td width='9%' align='center' >";
+									if (users[i].userAliInfo != null
+											&& users[i].userAliInfo.md5key != null)
+										x += users[i].userAliInfo.md5key;
+									x += "</td><td width='9%' align='center' >";
+									if (users[i].userWXInfo != null
+											&& users[i].userWXInfo.mch_id != null)
+										x += users[i].userWXInfo.mch_id;
+									x += "</td><td width='9%' align='center' >";
+									if (users[i].userWXInfo != null
+											&& users[i].userWXInfo.appid != null)
+										x += users[i].userWXInfo.appid;
+									x += "</td><td width='9%' align='center' >";
+									if (users[i].userWXInfo != null
+											&& users[i].userWXInfo.key != null)
+										x += users[i].userWXInfo.key;
+									x += "</td><td width='9%' align='center' >";
+									if (users[i].userWXInfo != null
+											&& users[i].userWXInfo.secret != null)
+										x += users[i].userWXInfo.secret;
+									x += "</td></tr><tr><td colspan=\"11\" style=\"border-bottom: 1px solid #000\"></td></tr><tr><td>机器列表</td>";
+									x += ml + "</table>";
 									$("#accordion").append(t);
 									$("#accordion").append(x);
 								}

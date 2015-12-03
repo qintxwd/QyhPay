@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Machine implements Serializable {
 	private static final long serialVersionUID = 8904281547213597381L;
@@ -23,6 +25,7 @@ public class Machine implements Serializable {
 	@Column(name = "name", length = 500, nullable = false)
 	private String name;
 	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+	@JsonBackReference
 	private User user;
 
 	public int getId() {

@@ -12,7 +12,6 @@ import com.qyh.entity.User;
 import com.qyh.service.IUserService;
 
 @Service("userService")
-// 声明此类为业务逻辑层的类
 public class UserService implements IUserService {
 
 	@Autowired
@@ -31,9 +30,9 @@ public class UserService implements IUserService {
 		if (user.getUserWXInfo() != null) {
 			userWXInfoDao.save(user.getUserWXInfo());
 		}
-//		if(user.getMachines()!=null){
-//			//TODO
-//		}
+		// if(user.getMachines()!=null){
+		// //TODO
+		// }
 	}
 
 	@Override
@@ -59,6 +58,10 @@ public class UserService implements IUserService {
 	@Override
 	public List<User> getUserList(int page) {
 		return userDao.getUserList(page);
+	}
+
+	public User get(String username, String password) {
+		return userDao.get(username, password);
 	}
 
 }

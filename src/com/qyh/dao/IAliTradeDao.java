@@ -14,4 +14,6 @@ public interface IAliTradeDao {
 	public List<AliTrade> query();
 
 	public AliTrade get(int id);
+
+	public AliTrade get(String out_trade_no);
 }

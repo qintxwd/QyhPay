@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class AliTrade implements Serializable {
 
@@ -21,6 +23,7 @@ public class AliTrade implements Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Integer id;
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference
 	private Machine machine;
 	@Column(name = "sign", length = 500, nullable = false)
 	private String sign;

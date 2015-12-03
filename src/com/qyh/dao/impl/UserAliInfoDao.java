@@ -8,7 +8,7 @@ import com.qyh.dao.BaseHibernateDao;
 import com.qyh.dao.IUserAliInfoDao;
 import com.qyh.entity.UserAliInfo;
 
-// 声明此类为数据持久层的类
+
 @Repository("userAliInfoDao")
 public class UserAliInfoDao extends BaseHibernateDao implements IUserAliInfoDao {
 

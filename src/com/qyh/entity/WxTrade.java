@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 //Œ¢–≈‘§÷ß∏∂∂©µ•
 @Entity
 public class WxTrade implements Serializable {
@@ -22,6 +24,7 @@ public class WxTrade implements Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Integer id;
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference
 	private Machine machine;
 	@Column(name = "nonce_str", length = 500, nullable = false)
 	private String nonce_str;
