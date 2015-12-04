@@ -16,4 +16,8 @@ public interface IAliTradeDao {
 	public AliTrade get(int id);
 
 	public AliTrade get(String out_trade_no);
+
+	public AliTrade getLastTrade(String username, String machine);
+
+	AliTrade getByOutTradeNo(String out_trade_no);
 }

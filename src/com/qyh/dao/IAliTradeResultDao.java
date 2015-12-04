@@ -14,4 +14,5 @@ public interface IAliTradeResultDao {
 	public List<AliTradeResult> query();
 
 	public AliTradeResult get(int id);
+
 }

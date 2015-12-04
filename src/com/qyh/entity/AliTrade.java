@@ -1,6 +1,7 @@
 package com.qyh.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,11 +41,13 @@ public class AliTrade implements Serializable {
 	@Column(name = "total_fee", length = 500, nullable = false)
 	private String total_fee;
 	@Column(name = "body", length = 500)
-	private String body; // ÉÌÆ·ÃèÊö
+	private String body; // ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½
 	@Column(name = "exter_invoke_ip", length = 500)
 	private String exter_invoke_ip;
 	@Column(name = "it_b_pay", length = 500)
 	private String it_b_pay;
+	@Column(name="date_time")
+	private Date date;
 
 	public Integer getId() {
 		return id;
@@ -140,5 +143,13 @@ public class AliTrade implements Serializable {
 
 	public void setIt_b_pay(String it_b_pay) {
 		this.it_b_pay = it_b_pay;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }

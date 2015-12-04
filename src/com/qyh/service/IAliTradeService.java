@@ -14,4 +14,5 @@ public interface IAliTradeService {
 
 	public AliTrade get(int id);
 
+	public AliTrade getLastTrade(String username, String machine);
 }

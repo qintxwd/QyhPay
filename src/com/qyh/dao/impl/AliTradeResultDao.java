@@ -8,7 +8,7 @@ import com.qyh.dao.BaseHibernateDao;
 import com.qyh.dao.IAliTradeResultDao;
 import com.qyh.entity.AliTradeResult;
 
-// ÉùÃ÷´ËÀàÎªÊý¾Ý³Ö¾Ã²ãµÄÀà
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Ý³Ö¾Ã²ï¿½ï¿½ï¿½ï¿½
 @Repository("aliTradeResultDao")
 public class AliTradeResultDao extends BaseHibernateDao implements IAliTradeResultDao {
 

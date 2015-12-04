@@ -51,44 +51,39 @@ public class Admin {
 			@RequestParam("seller_id") String seller_id, @RequestParam("appid") String appid,
 			@RequestParam("key") String key, @RequestParam("mch_id") String mch_id,
 			@RequestParam("secret") String secret, @RequestParam("machines") String[] machineNames) {
-		String s = new String();
 		try {
-			username =  new String(username.getBytes("ISO-8859-1"), "UTF-8"); 
-			password =  new String(password.getBytes("ISO-8859-1"), "UTF-8"); 
-			partner =  new String(partner.getBytes("ISO-8859-1"), "UTF-8"); 
-			pid =  new String(pid.getBytes("ISO-8859-1"), "UTF-8"); 
-			md5key =  new String(md5key.getBytes("ISO-8859-1"), "UTF-8"); 
-			seller_email =  new String(seller_email.getBytes("ISO-8859-1"), "UTF-8"); 
-			seller_id =  new String(seller_id.getBytes("ISO-8859-1"), "UTF-8"); 
-			appid =  new String(appid.getBytes("ISO-8859-1"), "UTF-8"); 
-			key =  new String(key.getBytes("ISO-8859-1"), "UTF-8"); 
-			mch_id =  new String(mch_id.getBytes("ISO-8859-1"), "UTF-8"); 
-			secret =  new String(secret.getBytes("ISO-8859-1"), "UTF-8"); 
+			username = new String(username.getBytes("ISO-8859-1"), "UTF-8");
+			password = new String(password.getBytes("ISO-8859-1"), "UTF-8");
+			partner = new String(partner.getBytes("ISO-8859-1"), "UTF-8");
+			pid = new String(pid.getBytes("ISO-8859-1"), "UTF-8");
+			md5key = new String(md5key.getBytes("ISO-8859-1"), "UTF-8");
+			seller_email = new String(seller_email.getBytes("ISO-8859-1"), "UTF-8");
+			seller_id = new String(seller_id.getBytes("ISO-8859-1"), "UTF-8");
+			appid = new String(appid.getBytes("ISO-8859-1"), "UTF-8");
+			key = new String(key.getBytes("ISO-8859-1"), "UTF-8");
+			mch_id = new String(mch_id.getBytes("ISO-8859-1"), "UTF-8");
+			secret = new String(secret.getBytes("ISO-8859-1"), "UTF-8");
 			for (int i = 0; i < machineNames.length; i++) {
-				machineNames[i] =  new String(machineNames[i].getBytes("ISO-8859-1"), "UTF-8"); 
+				machineNames[i] = new String(machineNames[i].getBytes("ISO-8859-1"), "UTF-8");
 			}
 		} catch (UnsupportedEncodingException e) {
 			return "发生转码错误";
 		}
 		if (username.equals("")) {
-			s = "用户名不能为空";
-			return s;
+			return "用户名不能为空";
 		}
 		if (password.equals("")) {
-			s = "密码不能为空";
-			return s;
+			return "密码不能为空";
 		}
 		if (!((partner.equals("") && pid.equals("") && md5key.equals("") && seller_email.equals("")
 				&& seller_id.equals(""))
 				|| (!partner.equals("") && !pid.equals("") && !md5key.equals("") && !seller_email.equals("")
 						&& !seller_id.equals("")))) {
-			s = "请完善支付宝信息";
-			return s;
+			return "请完善支付宝信息";
 		}
 		if (!((appid.equals("") && key.equals("") && mch_id.equals("") && secret.equals(""))
 				|| (!appid.equals("") && !key.equals("") && !mch_id.equals("") && !secret.equals("")))) {
-			s = "请完善微信信息";
-			return s;
+			return "请完善微信信息";
 		}
 
 		User u = new User(username, password);
@@ -122,7 +117,6 @@ public class Admin {
 			u.setMachines(machines);
 		}
 		userService.save(u);
-		s = "添加成功";
-		return s;
+		return "添加成功";
 	}
 }

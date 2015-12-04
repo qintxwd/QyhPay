@@ -38,4 +38,9 @@ public class AliTradeService implements IAliTradeService {
 		aliTradeDao.delete(id);
 	}
 
+	@Override
+	public AliTrade getLastTrade(String username, String machine) {
+		return aliTradeDao.getLastTrade(username, machine);
+	}
+
 }

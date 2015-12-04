@@ -9,7 +9,6 @@ import com.qyh.dao.BaseHibernateDao;
 import com.qyh.dao.IAliTradeDao;
 import com.qyh.entity.AliTrade;
 
-// ��������Ϊ���ݳ־ò����
 @Repository("aliTradeDao")
 public class AliTradeDao extends BaseHibernateDao implements IAliTradeDao {
 
@@ -48,6 +47,23 @@ public class AliTradeDao extends BaseHibernateDao implements IAliTradeDao {
 			return null;
 		else
 			return l.get(0);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public AliTrade getLastTrade(String username, String machine) {
+		String hql = "from AliTrade at where at.date = (select max(b.date) from AliTrade b)";
+		List<AliTrade> l = getSession().createQuery(hql).list();
+		if (l == null || l.isEmpty())
+			return null;
+		else
+			return l.get(0);
+	}
+
+	@Override
+	public AliTrade getByOutTradeNo(String out_trade_no) {
+		return (AliTrade) getSession().createQuery("from AliTrade at where at.out_trade_no = ?")
+				.setParameter(0, out_trade_no).list().get(0);
 	}
 
 }

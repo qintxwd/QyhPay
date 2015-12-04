@@ -20,7 +20,6 @@ public class AliTradeResult implements Serializable {
 	@GeneratedValue(generator = "generator")
 	@Column(name = "id", unique = true, nullable = false)
 	private Integer id;
-	// 以下为通知内容为出错时的内容:
 	@Column(name = "partner")
 	private String partner;
 	@Column(name = "out_trade_no")
@@ -37,7 +36,7 @@ public class AliTradeResult implements Serializable {
 	private String seller_email;
 	@Column(name = "seller_id")
 	private String seller_id;
-	// 以下内容为正常返回时的内容
+
 	@Column(name = "notify_time")
 	private Date notify_time;
 	@Column(name = "notify_type")
@@ -48,7 +47,6 @@ public class AliTradeResult implements Serializable {
 	private String sign_type;
 	@Column(name = "sign")
 	private String sign;
-	// private String out_trade_no;
 	@Column(name = "subject")
 	private String subject;
 	@Column
