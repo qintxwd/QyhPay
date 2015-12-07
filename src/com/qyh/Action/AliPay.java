@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,6 +48,7 @@ public class AliPay {
 	private static final String error_notify_url = "";
 	// private static final String notify_url =
 	// "http://localhost:8080/QyhPay2/alipay/notifyUrl";
+	// TODO
 	private static final String notify_url = "";
 	private static final String return_url = "";
 
@@ -324,6 +324,7 @@ public class AliPay {
 		return at.getOut_trade_no();
 	}
 
+	@ResponseBody
 	@RequestMapping(path = "alipay/notifyUrl")
 	public String notifyUrl(WebRequest webRequest, Model model) {
 		Map<String, String> params = new HashMap<String, String>();
@@ -348,7 +349,7 @@ public class AliPay {
 			// 交易状态
 			String trade_status = new String(webRequest.getParameter("trade_status").getBytes("ISO-8859-1"), "UTF-8");
 
-			User user = aliTradeResultService.getUserByAliOutTradeNo(out_trade_no);
+			User user = aliTradeService.getUserByAliOutTradeNo(out_trade_no);
 			if (user == null) {
 				// 并没有生成该订单号！肿么办？？ TODO
 				return "fail";
@@ -379,10 +380,10 @@ public class AliPay {
 					// new SimpleDateFormat("yyyy-MM-dd
 					// hh:mm:ss").parse(params.get("gmt_create"));
 
-					ar.setGmt_create(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(params.get("gmt_create")));
-					ar.setGmt_payment(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(params.get("gmt_payment")));
-					ar.setGmt_refund(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(params.get("gmt_refund")));
-					ar.setNotify_time(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(params.get("notify_time")));
+					ar.setGmt_create(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(params.get("gmt_create")));
+					ar.setGmt_payment(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(params.get("gmt_payment")));
+					ar.setGmt_refund(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(params.get("gmt_refund")));
+					ar.setNotify_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(params.get("notify_time")));
 
 					ar.setIs_total_fee_adjust(params.get("is_total_fee_adjust"));
 					ar.setNotify_id(params.get("notify_id"));
@@ -396,7 +397,7 @@ public class AliPay {
 					ar.setReturn_url(params.get("return_url"));
 
 					ar.setUse_coupon(params.get("use_coupon"));
-				} catch (ParseException e) {
+				} catch (Exception e) {
 					// e.printStackTrace();
 				}
 				aliTradeResultService.save(ar);
@@ -404,8 +405,23 @@ public class AliPay {
 			} else {// 验证失败
 				return "fail";
 			}
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			return "fail";
 		}
+	}
+
+	// 查询订单状态:
+	@ResponseBody
+	@RequestMapping(path = "alipay/getTradeStatus")
+	public String getTradeStatus(@RequestParam("out_trade_no") String out_trade_no,
+			@RequestParam("trade_no") String trade_no) {
+		String s = "Not Exist";
+		try {
+			s = aliTradeResultService.getTradeStatus(out_trade_no, trade_no);
+			if (s == null)
+				return "Not Exist";
+		} catch (Exception e) {
+		}
+		return s;
 	}
 }

@@ -1,6 +1,7 @@
 package com.qyh.service;
 
 import com.qyh.entity.AliTrade;
+import com.qyh.entity.User;
 
 public interface IAliTradeService {
 
@@ -15,4 +16,6 @@ public interface IAliTradeService {
 	public AliTrade get(int id);
 
 	public AliTrade getLastTrade(String username, String machine);
+
+	public User getUserByAliOutTradeNo(String out_trade_no);
 }

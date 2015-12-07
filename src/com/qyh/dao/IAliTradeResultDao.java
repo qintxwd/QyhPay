@@ -15,4 +15,6 @@ public interface IAliTradeResultDao {
 
 	public AliTradeResult get(int id);
 
+	String get(String out_trade_no, String trade_no);
+
 }

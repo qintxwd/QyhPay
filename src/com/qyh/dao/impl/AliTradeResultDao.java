@@ -8,7 +8,6 @@ import com.qyh.dao.BaseHibernateDao;
 import com.qyh.dao.IAliTradeResultDao;
 import com.qyh.entity.AliTradeResult;
 
-// ��������Ϊ���ݳ־ò����
 @Repository("aliTradeResultDao")
 public class AliTradeResultDao extends BaseHibernateDao implements IAliTradeResultDao {
 
@@ -36,6 +35,18 @@ public class AliTradeResultDao extends BaseHibernateDao implements IAliTradeResu
 	@Override
 	public AliTradeResult get(int id) {
 		return (AliTradeResult) getSession().get("from AliTradeResult", id);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public String get(String out_trade_no, String trade_no) {
+		List<String> tss = getSession()
+				.createQuery("select ar.trade_status from AliTradeResult ar where ar.out_trade_no=? and ar.trade_no=? ")
+				.setString(0, out_trade_no).setString(1, trade_no).list();
+
+		if (tss == null)
+			return null;
+		return tss.get(0);
 	}
 
 }

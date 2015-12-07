@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.qyh.dao.IAliTradeDao;
 import com.qyh.entity.AliTrade;
+import com.qyh.entity.User;
 import com.qyh.service.IAliTradeService;
 
 @Service("aliTradeService")
@@ -43,4 +44,9 @@ public class AliTradeService implements IAliTradeService {
 		return aliTradeDao.getLastTrade(username, machine);
 	}
 
+	@Override
+	public User getUserByAliOutTradeNo(String out_trade_no) {
+		AliTrade at = aliTradeDao.getByOutTradeNo(out_trade_no);
+		return at.getMachine().getUser();
+	}
 }

@@ -22,7 +22,7 @@
 	<!--<context:annotation-config/> -->
 	<!-- 允许对静态资源文件的访问 -->
 	<mvc:default-servlet-handler />
-
+	<aop:config proxy-target-class="true"/>
 	<bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
 		<property name="messageConverters">
@@ -101,7 +101,7 @@
 	</bean>
 	<!-- 加载事务管理器 <tx:annotation-driven transaction-manager="transactionManager"/> -->
 	<!-- 配置事务的传播特性 -->
-	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	<tx:advice id="txAdvice" transaction-manager="transactionManager" >
 		<tx:attributes>
 			<tx:method name="save*" propagation="REQUIRED" />
 			<tx:method name="update*" propagation="REQUIRED" />

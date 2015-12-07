@@ -9,7 +9,6 @@ import com.qyh.dao.BaseHibernateDao;
 import com.qyh.dao.IUserDao;
 import com.qyh.entity.User;
 
-// ��������Ϊ���ݳ־ò����
 @Repository("userDao")
 public class UserDao extends BaseHibernateDao implements IUserDao {
 
