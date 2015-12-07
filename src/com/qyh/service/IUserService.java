@@ -16,7 +16,9 @@ public interface IUserService {
 
 	public User get(int id);
 
-	public List<User> getUserList(int page);
-
 	public User get(String username, String password);
+
+	long getUserCount();
+
+	List<User> getUserList(int page, int perPage);
 }

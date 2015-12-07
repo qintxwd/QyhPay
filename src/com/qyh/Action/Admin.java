@@ -10,14 +10,11 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.qyh.entity.Machine;
 import com.qyh.entity.User;
-import com.qyh.entity.UserAliInfo;
-import com.qyh.entity.UserWXInfo;
 import com.qyh.service.impl.UserService;
 
 @Controller
@@ -31,15 +28,17 @@ public class Admin {
 		// request.setAttribute("password", password);
 		System.out.println("username = " + username);
 		System.out.println("password = " + password);
-		return "admin/admin";
+		return "admin/NewAdmin";
 	}
 
 	@ResponseBody
-	@RequestMapping(path = "/admin/getUserList", method = RequestMethod.GET)
-	public Map<String, Object> getUserList(@RequestParam("page") int page) {
+	@RequestMapping(path = "/admin/getUserList")
+	public Map<String, Object> getUserList(@RequestParam("page") int page, @RequestParam("rows") int perPage) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<User> users = userService.getUserList(page);
-		map.put("users", users);
+		List<User> users = userService.getUserList(page, perPage);
+		long i = userService.getUserCount();
+		map.put("total", i);
+		map.put("rows", users);
 		return map;
 	}
 
@@ -88,23 +87,17 @@ public class Admin {
 
 		User u = new User(username, password);
 		if (!md5key.equals("")) {
-			UserAliInfo uali = new UserAliInfo();
-			uali.setMd5key(md5key);
-			uali.setPartner(partner);
-			uali.setPid(pid);
-			uali.setSeller_email(seller_email);
-			uali.setSeller_id(seller_id);
-			uali.setUser(u);
-			u.setUserAliInfo(uali);
+			u.setMd5key(md5key);
+			u.setPartner(partner);
+			u.setPid(pid);
+			u.setSeller_email(seller_email);
+			u.setSeller_id(seller_id);
 		}
 		if (!appid.equals("")) {
-			UserWXInfo uwx = new UserWXInfo();
-			uwx.setAppid(appid);
-			uwx.setKey(key);
-			uwx.setMch_id(mch_id);
-			uwx.setSecret(secret);
-			uwx.setUser(u);
-			u.setUserWXInfo(uwx);
+			u.setAppid(appid);
+			u.setKey(key);
+			u.setMch_id(mch_id);
+			u.setSecret(secret);
 		}
 		if (machineNames != null && machineNames.length != 0) {
 			Set<Machine> machines = new HashSet<Machine>();

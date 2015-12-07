@@ -18,7 +18,9 @@ public interface IUserDao {
 
 	public User get(String username);
 
-	public List<User> getUserList(int page);
+	public List<User> getUserList(int page, int perPage);
 
 	public User get(String username, String password);
+
+	public long getUserCount();
 }

@@ -40,9 +40,9 @@ public class UserDao extends BaseHibernateDao implements IUserDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> getUserList(int page) {
-		return getSession().createQuery("from User").setFirstResult(0 + (page - 1) * 20).setMaxResults(page * 20)
-				.list();
+	public List<User> getUserList(int page, int perPage) {
+		return getSession().createQuery("from User").setFirstResult(0 + (page - 1) * perPage)
+				.setMaxResults(page * perPage).list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -55,5 +55,10 @@ public class UserDao extends BaseHibernateDao implements IUserDao {
 			return null;
 		else
 			return l.get(0);
+	}
+
+	@Override
+	public long getUserCount() {
+		return (long) getSession().createQuery("select count(*) from User u").uniqueResult();
 	}
 }

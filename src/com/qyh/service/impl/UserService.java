@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.qyh.dao.IUserAliInfoDao;
 import com.qyh.dao.IUserDao;
-import com.qyh.dao.IUserWXInfoDao;
 import com.qyh.entity.User;
 import com.qyh.service.IUserService;
 
@@ -16,23 +14,10 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private IUserDao userDao;
-	@Autowired
-	private IUserAliInfoDao userAliInfoDao;
-	@Autowired
-	private IUserWXInfoDao userWXInfoDao;
 
 	@Override
 	public void save(User user) {
 		userDao.save(user);
-		if (user.getUserAliInfo() != null) {
-			userAliInfoDao.save(user.getUserAliInfo());
-		}
-		if (user.getUserWXInfo() != null) {
-			userWXInfoDao.save(user.getUserWXInfo());
-		}
-		// if(user.getMachines()!=null){
-		// //TODO
-		// }
 	}
 
 	@Override
@@ -56,12 +41,18 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public List<User> getUserList(int page) {
-		return userDao.getUserList(page);
+	public List<User> getUserList(int page, int perPage) {
+		return userDao.getUserList(page, perPage);
 	}
 
+	@Override
 	public User get(String username, String password) {
 		return userDao.get(username, password);
+	}
+
+	@Override
+	public long getUserCount() {
+		return userDao.getUserCount();
 	}
 
 }

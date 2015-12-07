@@ -171,7 +171,7 @@ public class AliPay {
 		// 获得签名验证结果
 		boolean isSign = false;
 		if (sign_type.equals("MD5")) {
-			isSign = MD5.verify(preSignStr, sign, user.getUserAliInfo().getMd5key(), input_charset);
+			isSign = MD5.verify(preSignStr, sign, user.getMd5key(), input_charset);
 		}
 		return isSign;
 	}
@@ -179,7 +179,7 @@ public class AliPay {
 	private String verifyResponse(String notify_id, User user) {
 		// 获取远程服务器ATN结果，验证是否是支付宝服务器发来的请求
 
-		String partner = user.getUserAliInfo().getPartner();
+		String partner = user.getPartner();
 		String veryfy_url = HTTPS_VERIFY_URL + "partner=" + partner + "&notify_id=" + notify_id;
 
 		return checkUrl(veryfy_url);
@@ -223,7 +223,7 @@ public class AliPay {
 		if (user == null) {
 			return "用户名或者密码错误";
 		}
-		md5key = user.getUserAliInfo().getMd5key();
+		md5key = user.getMd5key();
 
 		Machine m = null;
 		Set<Machine> ms = user.getMachines();
@@ -243,9 +243,9 @@ public class AliPay {
 		sParaTemp.put("body", body);
 		// 加入固定的参数:
 		sParaTemp.put("service", service);
-		sParaTemp.put("partner", user.getUserAliInfo().getPartner());
-		sParaTemp.put("seller_email", user.getUserAliInfo().getSeller_email());
-		sParaTemp.put("seller_id", user.getUserAliInfo().getSeller_id());
+		sParaTemp.put("partner", user.getPartner());
+		sParaTemp.put("seller_email", user.getSeller_email());
+		sParaTemp.put("seller_id", user.getSeller_id());
 		sParaTemp.put("_input_charset", input_charset);
 		sParaTemp.put("payment_type", payment_type);
 		sParaTemp.put("qr_pay_mode", qr_pay_mode);

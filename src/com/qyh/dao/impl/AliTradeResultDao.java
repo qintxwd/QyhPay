@@ -48,5 +48,5 @@ public class AliTradeResultDao extends BaseHibernateDao implements IAliTradeResu
 			return null;
 		return tss.get(0);
 	}
-
+	
 }
