@@ -2,7 +2,6 @@ package com.qyh.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.type.StringType;
 import org.springframework.stereotype.Repository;
 
 import com.qyh.dao.BaseHibernateDao;

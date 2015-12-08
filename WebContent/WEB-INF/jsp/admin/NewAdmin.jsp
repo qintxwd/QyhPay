@@ -62,28 +62,48 @@
 	function destroyUser() {
 		var row = $('#dg').datagrid('getSelected');
 		if (row) {
-			$.messager.confirm('确认删除',
-					'确定要删除？？？', function(r) {
-						if (r) {
-							$.post('admin/deleteUser', {
-								id : row.id
-							}, function(result) {
-								if (result.success) {
-									$('#dg').datagrid('reload'); // reload the user data
-								} else {
-									$.messager.show({ // show error message
-										title : 'Error',
-										msg : result.errorMsg
-									});
-								}
-							}, 'json');
+			$.messager.confirm('确认删除', '确定要删除？？？', function(r) {
+				if (r) {
+					$.post('admin/deleteUser', {
+						id : row.id
+					}, function(result) {
+						if (result.success) {
+							$('#dg').datagrid('reload'); // reload the user data
+						} else {
+							$.messager.show({ // show error message
+								title : 'Error',
+								msg : result.errorMsg
+							});
 						}
-					});
+					}, 'json');
+				}
+			});
 		}
 	}
-	$(function() {
-
-	});
+	/*
+	$("body")
+			.on(
+					"click",
+					//"td",
+					function() {
+						var row = $('#dg').datagrid('getSelected');
+						if (row) {
+							var prefix = "<div class=\"fitem\"><label>机器列表:</label></div>"
+							$("#machineList").append(prefix);
+							var macs = row.machines;
+							if (macs.length) {
+								for (tempi = 0; i < macs.length; i++) {
+									var mac = "<div class=\"fitem\"><label></label><label>"
+											+ macs[i].name + "</label></div>"
+									$("#machineList").append(mac);
+								}
+							}
+						}
+					});
+	 */
+	//$(function() {
+		//$('#dg').datagrid();
+	//});
 </script>
 <style type="text/css">
 #fm {
@@ -135,7 +155,7 @@
 				<th field="key">微信key</th>
 				<th field="mch_id">微信mch_id</th>
 				<th field="secret">微信secret</th>
-				<th field="machines">机器</th>
+				<th>机器列表</th>
 			</tr>
 		</thead>
 	</table>
@@ -210,6 +230,7 @@
 			iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
 			style="width: 90px">取消</a>
 	</div>
+	
 
 </body>
 </html>

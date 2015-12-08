@@ -175,4 +175,19 @@ public class Admin {
 		}
 		return map;
 	}
+	
+	@ResponseBody
+	@RequestMapping(path = "/admin/getUserDetail")
+	public Map<String, Object> getDetailUser(@RequestParam("id") int id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			User u = userService.get(id);
+			map.put("user", u);
+			map.put("success", true);
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("errorMsg", e.toString());
+		}
+		return map;
+	}
 }
