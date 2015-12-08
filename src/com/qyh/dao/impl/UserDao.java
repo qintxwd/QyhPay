@@ -11,15 +11,17 @@ import com.qyh.entity.User;
 
 @Repository("userDao")
 public class UserDao extends BaseHibernateDao implements IUserDao {
-
+	@Override
 	public void save(User user) {
 		getSession().save(user);
 	}
 
+	@Override
 	public void delete(int id) {
 		getSession().delete(getSession().load(User.class, id));
 	}
 
+	@Override
 	public void update(User user) {
 		getSession().update(user);
 	}
@@ -29,32 +31,29 @@ public class UserDao extends BaseHibernateDao implements IUserDao {
 		return getSession().createQuery("from User").list();
 	}
 
+	@Override
 	public User get(int id) {
-		return (User) getSession().get("from User", id);
+		return (User) getSession().createQuery("from User where id=" + id).setReadOnly(false).uniqueResult();
 	}
 
 	@Override
 	public User get(String username) {
-		return (User) getSession().get("from User", username);
+		return (User) getSession().createQuery("from User where username=" + username).setReadOnly(false)
+				.uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUserList(int page, int perPage) {
-		return getSession().createQuery("from User").setFirstResult(0 + (page - 1) * perPage)
+		return (List<User>) getSession().createQuery("from User").setFirstResult(0 + (page - 1) * perPage)
 				.setMaxResults(page * perPage).list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public User get(String username, String password) {
 		String hql = "from User where username=? and password=?";
-		List<User> l = getSession().createQuery(hql).setParameter(0, username, StringType.INSTANCE)
-				.setParameter(1, password, StringType.INSTANCE).list();
-		if (l == null || l.isEmpty())
-			return null;
-		else
-			return l.get(0);
+		return (User) getSession().createQuery(hql).setString(0, username).setString(1, password).setReadOnly(false)
+				.uniqueResult();
 	}
 
 	@Override

@@ -28,7 +28,7 @@
 	function newUser() {
 		$('#dlg').dialog('open').dialog('center').dialog('setTitle', '添加商户');
 		$('#fm').form('clear');
-		url = 'save_user.php';
+		url = 'admin/addUser';
 	}
 	function editUser() {
 		var row = $('#dg').datagrid('getSelected');
@@ -36,7 +36,7 @@
 			$('#dlg').dialog('open').dialog('center').dialog('setTitle',
 					'编辑商户信息');
 			$('#fm').form('load', row);
-			url = 'update_user.php?id=' + row.id;
+			url = 'admin/updateUser?id=' + row.id;
 		}
 	}
 	function saveUser() {
@@ -62,10 +62,10 @@
 	function destroyUser() {
 		var row = $('#dg').datagrid('getSelected');
 		if (row) {
-			$.messager.confirm('Confirm',
-					'Are you sure you want to destroy this user?', function(r) {
+			$.messager.confirm('确认删除',
+					'确定要删除？？？', function(r) {
 						if (r) {
-							$.post('destroy_user.php', {
+							$.post('admin/deleteUser', {
 								id : row.id
 							}, function(result) {
 								if (result.success) {
@@ -82,8 +82,7 @@
 		}
 	}
 	$(function() {
-		var ttt = total;
-		alert(ttt);
+
 	});
 </script>
 <style type="text/css">
@@ -136,6 +135,7 @@
 				<th field="key">微信key</th>
 				<th field="mch_id">微信mch_id</th>
 				<th field="secret">微信secret</th>
+				<th field="machines">机器</th>
 			</tr>
 		</thead>
 	</table>
@@ -150,7 +150,7 @@
 
 	<!-- 以下为弹出的添加商户的弹出框 -->
 	<div id="dlg" class="easyui-dialog"
-		style="width: 480px; height: 520px; padding: 10px 20px" closed="true"
+		style="width: 520px; height: 520px; padding: 10px 20px" closed="true"
 		buttons="#dlg-buttons">
 		<div class="ftitle">请填写商户信息</div>
 		<form id="fm" method="post" novalidate>
@@ -200,7 +200,7 @@
 				<label>机器列表:</label>
 			</div>
 			<div class="fitem">
-				<label></label> <input name="addmachine0" class="easyui-textbox">
+				<label></label> <input name="machines" class="easyui-textbox">
 			</div>
 		</form>
 	</div>
