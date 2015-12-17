@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 import com.qyh.dao.BaseHibernateDao;
 import com.qyh.dao.IMachineDao;
 import com.qyh.entity.Machine;
+import com.qyh.entity.User;
 
-// ÉùÃ÷´ËÀàÎªÊý¾Ý³Ö¾Ã²ãµÄÀà
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Ý³Ö¾Ã²ï¿½ï¿½ï¿½ï¿½
 @Repository("machineDao")
 public class MachineDao extends BaseHibernateDao implements IMachineDao {
 
@@ -36,6 +37,18 @@ public class MachineDao extends BaseHibernateDao implements IMachineDao {
 	@Override
 	public Machine get(int id) {
 		return (Machine) getSession().get("from Machine", id);
+	}
+
+	@Override
+	public Machine get(String name, int userId) {
+		return (Machine) getSession().createQuery("from Machine m where m.name = ? and m.User = ?")
+				.setParameter(0, name).setParameter(1, userId).uniqueResult();
+	}
+
+	@Override
+	public void delete(String machineName, User u) {
+		getSession().createQuery("delete from Machine m where m.name = ? and m.User = ?").setParameter(0, machineName)
+				.setParameter(1, u).executeUpdate();
 	}
 
 }

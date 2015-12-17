@@ -24,6 +24,7 @@
 
 
 <script type="text/javascript">
+	var curRowId;
 	var url;
 	function newUser() {
 		$('#dlg').dialog('open').dialog('center').dialog('setTitle', '添加商户');
@@ -80,30 +81,125 @@
 			});
 		}
 	}
-	/*
-	$("body")
-			.on(
-					"click",
-					//"td",
-					function() {
-						var row = $('#dg').datagrid('getSelected');
-						if (row) {
-							var prefix = "<div class=\"fitem\"><label>机器列表:</label></div>"
-							$("#machineList").append(prefix);
-							var macs = row.machines;
-							if (macs.length) {
-								for (tempi = 0; i < macs.length; i++) {
-									var mac = "<div class=\"fitem\"><label></label><label>"
-											+ macs[i].name + "</label></div>"
-									$("#machineList").append(mac);
-								}
+	function EditMachines(id) {
+		curRowId = id;
+		var rows = $('#dg').datagrid('getRows');
+		$("#machineListUl").empty();
+		$
+				.each(
+						rows,
+						function(i, item) {
+							if (item.id == id) {
+								var ms = item.machines;
+								$
+										.each(
+												ms,
+												function(j, ite) {
+													var xxx = $(
+															"#machineListUl")
+															.append(
+																	"<li><i>"
+																			+ ite.name
+																			+ "</i> <a href='javascript:void(0)' class='easyui-linkbutton' iconCls='icon-remove' plain='true' style='float: right; padding-right: 10px;' name='deleteButton'>删除</a></li>");
+												});
+								$.parser.parse($('#machineListUl'));
+								$("#machineListUl").datalist({});
 							}
-						}
-					});
-	 */
-	//$(function() {
-		//$('#dg').datagrid();
-	//});
+						});
+		$('#MLdlg').dialog('open').dialog('center').dialog('setTitle', '机器列表');
+	}
+	function MachineList(val, row) {
+		id = row.id;
+		return "<a href='javacript:;' onclick='EditMachines(" + id
+				+ ");'>机器列表</a>";
+	}
+	function addNewMachine() {
+		name = $("#addMachineToUser").val();
+		if (name.length <= 0 || name == "") {
+			$("#info").html("名字不能为空");
+			return;
+		}
+		$
+				.ajax(
+						{
+							url : "admin/addMachineToUser",
+							type : 'GET',
+							//timeout : 10000,
+							//cache : false,
+							data : {
+								"name" : name,
+								"id" : curRowId
+							},
+							dataType : "json",
+							beforeSend : function() {
+								$("#info").html("正在添加...");
+							},
+							error : function() {
+								$("#info").html("添加出错");
+							},
+							success : function(data) {
+								$("#info").html("添加成功");
+								$("#machineListUl")
+										.append(
+												"<li><i>"
+														+ name
+														+ "</i> <a href='javascript:void(0)' class='easyui-linkbutton' iconCls='icon-remove' plain='true' style='float: right; padding-right: 10px;' onclick='deleteMachine()' name='deleteButton'>删除</a></li>");
+								$.parser.parse($('#machineListUl'));
+								$("#machineListUl").datalist({});
+							},
+						}).done(function() {
+					//$("#info").html("添加成功");
+				});
+	}
+	
+	/*
+	$(".easyui-linkbutton a[name='deleteButton']").click(function() {
+		name = $(this).parent().children("i").val();
+		$.ajax({
+			url : "admin/delMachineFromeUser",
+			type : 'GET',
+			data : {
+				"name" : name,
+				"id" : curRowId
+			},
+			dataType : "json",
+			beforeSend : function() {
+				$("#info").html("正在删除...");
+			},
+			error : function() {
+				$("#info").html("删除出错");
+			},
+			success : function(data) {
+				$("#info").html("删除成功");
+				$(this).parent().remove();
+				$("#machineListUl").datalist({});
+			},
+		});
+	});
+	*/
+	$("body").on("click", "a[name='deleteButton']", function() {
+		name = $(this).parent().children("i").val();
+		$.ajax({
+			url : "admin/delMachineFromeUser",
+			type : 'GET',
+			data : {
+				"name" : name,
+				"id" : curRowId
+			},
+			dataType : "json",
+			beforeSend : function() {
+				$("#info").html("正在删除...");
+			},
+			error : function() {
+				$("#info").html("删除出错");
+			},
+			success : function(data) {
+				$("#info").html("删除成功");
+				$(this).parent().remove();
+				$("#machineListUl").datalist({});
+			},
+		});
+	});
 </script>
 <style type="text/css">
 #fm {
@@ -155,7 +251,7 @@
 				<th field="key">微信key</th>
 				<th field="mch_id">微信mch_id</th>
 				<th field="secret">微信secret</th>
-				<th>机器列表</th>
+				<th field="machines" formatter="MachineList">机器列表</th>
 			</tr>
 		</thead>
 	</table>
@@ -220,7 +316,7 @@
 				<label>机器列表:</label>
 			</div>
 			<div class="fitem">
-				<label></label> <input name="machines" class="easyui-textbox">
+				<label></label> <input class="easyui-textbox">
 			</div>
 		</form>
 	</div>
@@ -230,7 +326,17 @@
 			iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
 			style="width: 90px">取消</a>
 	</div>
-	
-
+	<!-- 以下为弹出的机器列表的弹出框 -->
+	<div id="MLdlg" class="easyui-dialog"
+		style="width: 520px; height: 520px; padding: 10px 20px" closed="true">
+		<ul id="machineListUl" class="easyui-datalist" lines="true"
+			style="width: 450px; height: 350px">
+		</ul>
+		<label>新增机器：</label> <input id="addMachineToUser" name="addNewMachine"
+			class="easyui-textbox" required="true"><a
+			href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-add" plain="true" onclick="addNewMachine()">添加</a>
+		<ul id="info"></ul>
+	</div>
 </body>
 </html>

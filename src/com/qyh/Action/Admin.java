@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.qyh.entity.Machine;
 import com.qyh.entity.User;
+import com.qyh.service.impl.MachineService;
 import com.qyh.service.impl.UserService;
 
 @Controller
 public class Admin {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private MachineService machineService;
 
 	@RequestMapping("/admin/login")
 	public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
@@ -155,6 +158,24 @@ public class Admin {
 			@RequestParam("secret") String secret) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
+			username = new String(username.getBytes("ISO-8859-1"), "UTF-8");
+			password = new String(password.getBytes("ISO-8859-1"), "UTF-8");
+			partner = new String(partner.getBytes("ISO-8859-1"), "UTF-8");
+			pid = new String(pid.getBytes("ISO-8859-1"), "UTF-8");
+			md5key = new String(md5key.getBytes("ISO-8859-1"), "UTF-8");
+			seller_email = new String(seller_email.getBytes("ISO-8859-1"), "UTF-8");
+			seller_id = new String(seller_id.getBytes("ISO-8859-1"), "UTF-8");
+			appid = new String(appid.getBytes("ISO-8859-1"), "UTF-8");
+			key = new String(key.getBytes("ISO-8859-1"), "UTF-8");
+			mch_id = new String(mch_id.getBytes("ISO-8859-1"), "UTF-8");
+			secret = new String(secret.getBytes("ISO-8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			map.put("success", false);
+			map.put("errorMsg", "发生转码错误");
+			return map;
+		}
+		
+		try {
 			User u = userService.get(id);
 			u.setAppid(appid);
 			u.setKey(key);
@@ -190,4 +211,70 @@ public class Admin {
 		}
 		return map;
 	}
+	
+	@ResponseBody
+	@RequestMapping(path = "/admin/delMachineFromeUser")
+	public Map<String, Object> delMachineFromeUser(@RequestParam("id") int id,@RequestParam("name") String machineName) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			machineName = new String(machineName.getBytes("ISO-8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			map.put("success", false);
+			map.put("errorMsg", "发生转码错误");
+			return map;
+		}
+		try {
+			User u = userService.get(id);
+			machineService.delete(machineName, u);
+			//u.getMachines().remove(u.getMachines().);
+			//map.put("user", u);
+			map.put("success", true);
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("errorMsg", e.toString());
+		}
+		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping(path = "/admin/addMachineToUser")
+	public Map<String, Object> addMachineToUser(@RequestParam("id") int id,@RequestParam("name") String machineName) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			machineName = new String(machineName.getBytes("ISO-8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			map.put("success", false);
+			map.put("errorMsg", "发生转码错误");
+			return map;
+		}
+		try {
+			User u = userService.get(id);
+			Machine m = new Machine();
+			m.setName(machineName);
+			m.setUser(u);
+			machineService.save(m);
+			map.put("success", true);
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("errorMsg", e.toString());
+		}
+		return map;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(path = "/admin/listMachinesOfUser")
+	public Map<String, Object> listMachinesOfUser(@RequestParam("id") int id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			User u = userService.get(id);
+			Set<Machine> machines = u.getMachines();
+			map.put("machines", machines);
+		} catch (Exception e) {
+			map.put("success", false);
+			map.put("errorMsg", e.toString());
+		}
+		return map;
+	}
+	
 }
